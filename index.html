@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bike Speedometer</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        background: #101820;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .app {
+        width: 100%;
+        max-width: 430px;
+        min-height: 100vh;
+        padding: 25px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+
+    h1 {
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    .speed-card {
+        background: #182632;
+        border-radius: 30px;
+        padding: 40px 20px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    }
+
+    .speed {
+        font-size: 90px;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    .unit {
+        font-size: 22px;
+        margin-top: 10px;
+        color: #b8c5cc;
+    }
+
+    .status {
+        margin-top: 25px;
+        font-size: 15px;
+        color: #9fd3ff;
+    }
+
+    .info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .box {
+        background: #182632;
+        padding: 18px 10px;
+        border-radius: 18px;
+    }
+
+    .label {
+        font-size: 13px;
+        color: #9daab2;
+        margin-bottom: 7px;
+    }
+
+    .value {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    button {
+        margin-top: 25px;
+        width: 100%;
+        padding: 18px;
+        border: none;
+        border-radius: 15px;
+        font-size: 18px;
+        font-weight: bold;
+        background: #2196f3;
+        color: white;
+        cursor: pointer;
+    }
+
+    button.stop {
+        background: #e53935;
+    }
+
+    .warning {
+        margin-top: 18px;
+        color: #ffcc80;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <h1>🏍️ Bike Speedometer</h1>
+
+    <div class="speed-card">
+
+        <div id="speed" class="speed">0</div>
+        <div class="unit">KM/H</div>
+
+        <div id="status" class="status">
+            Ready to start
+        </div>
+
+    </div>
+
+    <div class="info">
+
+        <div class="box">
+            <div class="label">GPS Accuracy</div>
+            <div id="accuracy" class="value">-- m</div>
+        </div>
+
+        <div class="box">
+            <div class="label">Distance</div>
+            <div id="distance" class="value">0 m</div>
+        </div>
+
+    </div>
+
+    <button id="startButton" onclick="startTracking()">
+        START
+    </button>
+
+    <div class="warning">
+        For accurate speed, keep Precise Location enabled
+        and allow the app to access your location.
+    </div>
+
+</div>
+
+<script>
+
+let watchId = null;
+
+let previousPosition = null;
+let totalDistance = 0;
+
+const speedElement = document.getElementById("speed");
+const accuracyElement = document.getElementById("accuracy");
+const distanceElement = document.getElementById("distance");
+const statusElement = document.getElementById("status");
+const startButton = document.getElementById("startButton");
+
+
+function startTracking() {
+
+    if (!navigator.geolocation) {
+
+        alert("Geolocation is not supported on this device.");
+
+        return;
+    }
+
+    totalDistance = 0;
+    previousPosition = null;
+
+    speedElement.textContent = "0";
+    distanceElement.textContent = "0 m";
+
+    statusElement.textContent = "Getting GPS location...";
+
+    startButton.textContent = "STOP";
+    startButton.classList.add("stop");
+    startButton.onclick = stopTracking;
+
+
+    watchId = navigator.geolocation.watchPosition(
+
+        handleLocation,
+
+        handleError,
+
+        {
+            enableHighAccuracy: true,
+            maximumAge: 1000,
+            timeout: 10000
+        }
+
+    );
+}
+
+
+function handleLocation(position) {
+
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    const accuracy = position.coords.accuracy;
+
+    accuracyElement.textContent =
+        accuracy.toFixed(1) + " m";
+
+
+    /*
+       Browser/device may provide speed directly.
+       speed is returned in meters per second.
+    */
+
+    let speedKmh = 0;
+
+    if (
+        position.coords.speed !== null &&
+        position.coords.speed >= 0
+    ) {
+
+        speedKmh = position.coords.speed * 3.6;
+
+    }
+
+
+    /*
+       If speed is unavailable,
+       calculate speed using two GPS points.
+    */
+
+    if (
+        (position.coords.speed === null ||
+         position.coords.speed < 0) &&
+        previousPosition !== null
+    ) {
+
+        const distance =
+            calculateDistance(
+                previousPosition.coords.latitude,
+                previousPosition.coords.longitude,
+                latitude,
+                longitude
+            );
+
+        const time =
+            (position.timestamp -
+             previousPosition.timestamp) / 1000;
+
+        if (time > 0) {
+
+            speedKmh =
+                (distance / time) * 3.6;
+
+        }
+
+    }
+
+
+    /*
+       Ignore tiny GPS movement caused by GPS drift.
+    */
+
+    if (previousPosition !== null) {
+
+        const movement =
+            calculateDistance(
+                previousPosition.coords.latitude,
+                previousPosition.coords.longitude,
+                latitude,
+                longitude
+            );
+
+        if (accuracy <= 20 && movement >= 1) {
+
+            totalDistance += movement;
+
+        }
+
+    }
+
+
+    previousPosition = position;
+
+
+    /*
+       Prevent strange GPS spikes.
+    */
+
+    if (speedKmh > 200) {
+
+        speedKmh = 0;
+
+    }
+
+
+    speedElement.textContent =
+        speedKmh.toFixed(1);
+
+    distanceElement.textContent =
+        formatDistance(totalDistance);
+
+    statusElement.textContent =
+        "GPS tracking active";
+}
+
+
+/*
+   Calculate distance between two GPS coordinates.
+   Returns meters.
+*/
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+
+    const R = 6371000;
+
+    const dLat =
+        toRadians(lat2 - lat1);
+
+    const dLon =
+        toRadians(lon2 - lon1);
+
+    const a =
+        Math.sin(dLat / 2) *
+        Math.sin(dLat / 2) +
+
+        Math.cos(toRadians(lat1)) *
+        Math.cos(toRadians(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c =
+        2 * Math.atan2(
+            Math.sqrt(a),
+            Math.sqrt(1 - a)
+        );
+
+    return R * c;
+}
+
+
+function toRadians(degrees) {
+
+    return degrees * Math.PI / 180;
+
+}
+
+
+function formatDistance(meters) {
+
+    if (meters < 1000) {
+
+        return meters.toFixed(1) + " m";
+
+    }
+
+    return (meters / 1000).toFixed(2) + " km";
+
+}
+
+
+function stopTracking() {
+
+    if (watchId !== null) {
+
+        navigator.geolocation.clearWatch(watchId);
+
+        watchId = null;
+
+    }
+
+    statusElement.textContent =
+        "Tracking stopped";
+
+    startButton.textContent = "START";
+
+    startButton.classList.remove("stop");
+
+    startButton.onclick = startTracking;
+
+}
+
+
+function handleError(error) {
+
+    let message = "";
+
+    switch (error.code) {
+
+        case error.PERMISSION_DENIED:
+            message = "Location permission denied.";
+            break;
+
+        case error.POSITION_UNAVAILABLE:
+            message = "GPS location unavailable.";
+            break;
+
+        case error.TIMEOUT:
+            message = "GPS request timed out.";
+            break;
+
+        default:
+            message = "Unknown GPS error.";
+    }
+
+    statusElement.textContent = message;
+
+}
+
+</script>
+
+</body>
+</html>
