@@ -2,60 +2,48 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>Bike Speedometer</title>
 
 <style>
-
 * {
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
-
-html,
-body {
     margin: 0;
-    width: 100%;
-    min-height: 100%;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
     font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
         Arial,
-        Helvetica,
         sans-serif;
 
+    min-height: 100vh;
     background:
-        radial-gradient(
-            circle at top,
-            #263746 0%,
-            #101820 42%,
-            #080d12 100%
-        );
+        radial-gradient(circle at top, #18243d 0%, #090d16 45%, #05070b 100%);
 
     color: white;
-
     display: flex;
     justify-content: center;
+    align-items: center;
 
-    overflow-x: hidden;
+    overflow: hidden;
 }
-
-
-/* MAIN APP */
 
 .app {
     width: 100%;
-    max-width: 460px;
+    max-width: 500px;
     min-height: 100vh;
+    padding: 22px 18px 20px;
 
-    padding:
-        25px 20px 55px;
-
-    position: relative;
+    display: flex;
+    flex-direction: column;
 }
-
 
 /* HEADER */
 
@@ -63,8 +51,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    margin-bottom: 28px;
+    margin-bottom: 25px;
 }
 
 .brand {
@@ -74,514 +61,323 @@ body {
 }
 
 .bike-icon {
-    width: 48px;
-    height: 48px;
+    width: 46px;
+    height: 46px;
 
-    border-radius: 16px;
+    border-radius: 14px;
+
+    background: linear-gradient(145deg, #1d9bf0, #1266d8);
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 25px;
+    font-size: 23px;
+
+    box-shadow:
+        0 8px 25px rgba(30, 144, 255, 0.28);
+}
+
+.brand-text h1 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+}
+
+.brand-text p {
+    margin-top: 3px;
+    font-size: 11px;
+    color: #8290a8;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+/* GPS STATUS */
+
+.gps-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 8px 11px;
+
+    border-radius: 20px;
+
+    background: rgba(255,255,255,0.055);
+    border: 1px solid rgba(255,255,255,0.07);
+
+    font-size: 10px;
+    color: #91a0b8;
+}
+
+.gps-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #ffb020;
+
+    box-shadow: 0 0 10px rgba(255,176,32,0.7);
+
+    transition: 0.3s;
+}
+
+.gps-dot.active {
+    background: #24e08b;
+    box-shadow: 0 0 10px rgba(36,224,139,0.8);
+}
+
+/* SPEED CARD */
+
+.speed-card {
+    position: relative;
+
+    margin-top: 5px;
+
+    padding: 34px 20px 30px;
+
+    border-radius: 30px;
 
     background:
         linear-gradient(
             145deg,
-            #243b4d,
-            #14222e
+            rgba(25, 38, 62, 0.96),
+            rgba(10, 16, 27, 0.96)
         );
 
     border: 1px solid rgba(255,255,255,0.08);
 
     box-shadow:
-        0 8px 25px rgba(0,0,0,0.35);
-}
-
-.title-area h1 {
-    margin: 0;
-
-    font-size: 22px;
-    font-weight: 800;
-
-    letter-spacing: 0.5px;
-}
-
-.title-area p {
-    margin: 4px 0 0;
-
-    font-size: 11px;
-
-    color: #91a2ae;
-
-    letter-spacing: 1.5px;
-
-    text-transform: uppercase;
-}
-
-
-/* GPS INDICATOR */
-
-.gps-indicator {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-
-    font-size: 11px;
-
-    color: #8fa1ad;
-}
-
-.gps-dot {
-    width: 8px;
-    height: 8px;
-
-    border-radius: 50%;
-
-    background: #35d07f;
-
-    box-shadow:
-        0 0 12px rgba(53,208,127,0.8);
-
-    animation: pulse 1.8s infinite;
-}
-
-@keyframes pulse {
-
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 0.45;
-        transform: scale(0.75);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-}
-
-
-/* SPEEDOMETER */
-
-.speed-card {
-
-    position: relative;
-
-    min-height: 330px;
-
-    border-radius: 36px;
-
-    padding: 35px 20px;
+        0 25px 70px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.03);
 
     text-align: center;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(35,55,69,0.96),
-            rgba(13,22,29,0.98)
-        );
-
-    border:
-        1px solid rgba(255,255,255,0.08);
-
-    box-shadow:
-        0 25px 70px rgba(0,0,0,0.45),
-
-        inset 0 1px 0
-        rgba(255,255,255,0.05);
 
     overflow: hidden;
 }
 
-
-/* Decorative circles */
-
 .speed-card::before {
-
     content: "";
 
     position: absolute;
 
-    width: 270px;
-    height: 270px;
+    width: 230px;
+    height: 230px;
 
-    border-radius: 50%;
-
-    border:
-        1px solid
-        rgba(33,150,243,0.15);
-
-    top: 50%;
+    top: -130px;
     left: 50%;
+    transform: translateX(-50%);
 
-    transform:
-        translate(-50%, -50%);
+    background: rgba(25,145,255,0.13);
 
+    filter: blur(50px);
+
+    pointer-events: none;
 }
-
-.speed-card::after {
-
-    content: "";
-
-    position: absolute;
-
-    width: 220px;
-    height: 220px;
-
-    border-radius: 50%;
-
-    border:
-        1px dashed
-        rgba(255,255,255,0.07);
-
-    top: 50%;
-    left: 50%;
-
-    transform:
-        translate(-50%, -50%);
-
-}
-
-
-/* SPEED LABEL */
 
 .speed-label {
-
     position: relative;
-
-    z-index: 2;
 
     font-size: 12px;
+    color: #8391a8;
 
     letter-spacing: 3px;
-
-    color: #82939f;
-
-    font-weight: 600;
-
     text-transform: uppercase;
+
+    margin-bottom: 8px;
 }
 
-
-/* SPEED NUMBER */
-
 .speed {
-
     position: relative;
 
-    z-index: 2;
-
-    margin-top: 18px;
-
-    font-size: 88px;
+    font-size: clamp(78px, 22vw, 118px);
 
     line-height: 0.95;
 
-    font-weight: 900;
+    font-weight: 800;
 
-    letter-spacing: -4px;
-
-    text-shadow:
-        0 0 25px rgba(33,150,243,0.18);
-}
-
-
-/* UNIT */
-
-.unit {
-
-    position: relative;
-
-    z-index: 2;
-
-    margin-top: 10px;
-
-    font-size: 16px;
-
-    font-weight: 700;
-
-    letter-spacing: 4px;
-
-    color: #6f8290;
-}
-
-
-/* STATUS */
-
-.status {
-
-    position: relative;
-
-    z-index: 2;
-
-    margin-top: 24px;
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    padding:
-        9px 15px;
-
-    border-radius: 50px;
+    letter-spacing: -5px;
 
     background:
-        rgba(255,255,255,0.045);
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #d9e8ff 45%,
+            #6daeff 100%
+        );
 
-    border:
-        1px solid rgba(255,255,255,0.06);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 
-    color: #9daeb9;
-
-    font-size: 11px;
-
-    letter-spacing: 0.5px;
+    text-shadow:
+        0 0 35px rgba(40,145,255,0.15);
 }
 
+.unit {
+    position: relative;
 
-/* INFORMATION GRID */
+    margin-top: 8px;
 
-.info {
+    font-size: 15px;
 
+    color: #7f8da5;
+
+    letter-spacing: 3px;
+}
+
+/* INFO */
+
+.info-grid {
     display: grid;
 
-    grid-template-columns:
-        1fr 1fr;
+    grid-template-columns: 1fr 1fr;
 
-    gap: 14px;
+    gap: 13px;
 
     margin-top: 16px;
 }
 
+.info-card {
+    min-height: 95px;
 
-/* INFO CARD */
+    padding: 17px;
 
-.box {
-
-    position: relative;
-
-    padding: 20px 17px;
-
-    min-height: 105px;
-
-    border-radius: 23px;
+    border-radius: 21px;
 
     background:
-        linear-gradient(
-            145deg,
-            rgba(29,45,57,0.95),
-            rgba(15,24,31,0.95)
-        );
+        rgba(17, 25, 39, 0.88);
 
-    border:
-        1px solid
-        rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.07);
 
-    box-shadow:
-        0 12px 30px
-        rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-
-/* Small top highlight */
-
-.box::before {
-
-    content: "";
-
-    position: absolute;
-
-    left: 17px;
-    top: 0;
-
-    width: 32px;
-    height: 2px;
-
-    border-radius: 10px;
-
-    background:
-        #2196f3;
-}
-
-
-/* INFO ICON */
-
-.info-icon {
-
-    font-size: 17px;
-
-    margin-bottom: 8px;
-
-    opacity: 0.85;
-}
-
-
-/* LABEL */
-
-.label {
-
+.info-title {
     font-size: 10px;
 
-    color: #7f919e;
+    color: #718098;
 
     text-transform: uppercase;
 
-    letter-spacing: 1.3px;
-
-    margin-bottom: 6px;
+    letter-spacing: 1.5px;
 }
 
+.info-value {
+    font-size: 24px;
 
-/* VALUE */
+    font-weight: 750;
 
-.value {
-
-    font-size: 21px;
-
-    font-weight: 800;
-
-    color: #f2f6f8;
+    color: #f4f7fb;
 }
 
+.info-unit {
+    font-size: 11px;
+    color: #76859d;
+    margin-left: 3px;
+}
 
 /* BUTTON */
 
-button {
-
+.start-button {
     width: 100%;
 
     margin-top: 18px;
 
-    padding: 19px 20px;
-
     border: none;
 
-    border-radius: 19px;
+    min-height: 61px;
 
-    font-size: 16px;
+    border-radius: 20px;
+
+    color: white;
+
+    font-size: 15px;
 
     font-weight: 800;
 
     letter-spacing: 2px;
 
-    color: white;
-
     background:
         linear-gradient(
             135deg,
-            #2196f3,
-            #1565c0
+            #168cff,
+            #0757c9
         );
 
     box-shadow:
-        0 12px 30px
-        rgba(33,150,243,0.25);
+        0 12px 30px rgba(0, 110, 255, 0.28);
 
     cursor: pointer;
 
     transition:
-        transform 0.12s ease,
-        box-shadow 0.12s ease;
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
-button:active {
-
+.start-button:active {
     transform: scale(0.97);
-
-    box-shadow:
-        0 6px 18px
-        rgba(33,150,243,0.2);
 }
 
-
-button.stop {
-
+.start-button.stop {
     background:
         linear-gradient(
             135deg,
-            #ef5350,
-            #c62828
+            #ff4d5e,
+            #c91f38
         );
 
     box-shadow:
-        0 12px 30px
-        rgba(229,57,53,0.25);
+        0 12px 30px rgba(255, 45, 70, 0.22);
 }
 
+/* FOOTER */
 
-/* CREDIT */
+.footer {
+    margin-top: auto;
 
-.credit {
+    text-align: right;
 
-    position: fixed;
+    padding-top: 18px;
 
-    right: 13px;
-    bottom: 9px;
+    font-size: 9px;
 
-    font-size: 10px;
+    color: rgba(255,255,255,0.28);
 
-    color:
-        rgba(255,255,255,0.32);
-
-    letter-spacing: 0.4px;
-
-    pointer-events: none;
+    letter-spacing: 0.5px;
 }
 
-
-/* SMALL SCREEN */
+/* SMALL DEVICES */
 
 @media (max-height: 700px) {
-
     .app {
-        padding-top: 18px;
+        padding-top: 15px;
     }
 
     .header {
-        margin-bottom: 18px;
+        margin-bottom: 15px;
     }
 
     .speed-card {
-        min-height: 285px;
-        padding: 28px 15px;
+        padding: 25px 18px 22px;
     }
 
     .speed {
-        font-size: 72px;
+        font-size: 82px;
     }
 
-    .info {
-        margin-top: 12px;
-    }
-
-    .box {
-        min-height: 92px;
-        padding: 16px;
-    }
-
-    button {
-        margin-top: 13px;
-        padding: 16px;
+    .info-card {
+        min-height: 82px;
     }
 }
-
 </style>
 </head>
 
-
 <body>
 
-
 <div class="app">
-
 
     <!-- HEADER -->
 
@@ -593,27 +389,22 @@ button.stop {
                 🏍️
             </div>
 
-            <div class="title-area">
-
+            <div class="brand-text">
                 <h1>Bike Speedometer</h1>
-
                 <p>Ride • Track • Measure</p>
-
             </div>
 
         </div>
 
+        <div class="gps-status">
 
-        <div class="gps-indicator">
+            <div id="gpsDot" class="gps-dot"></div>
 
-            <span class="gps-dot"></span>
-
-            GPS
+            <span id="gpsText">GPS OFF</span>
 
         </div>
 
     </div>
-
 
 
     <!-- SPEED -->
@@ -624,76 +415,44 @@ button.stop {
             Current Speed
         </div>
 
-
-        <div
-            id="speed"
-            class="speed">
+        <div id="speed" class="speed">
             0.0
         </div>
-
 
         <div class="unit">
             KM/H
         </div>
 
-
-        <div
-            id="status"
-            class="status">
-
-            <span class="gps-dot"></span>
-
-            Ready to start
-
-        </div>
-
     </div>
-
 
 
     <!-- INFORMATION -->
 
-    <div class="info">
+    <div class="info-grid">
 
+        <div class="info-card">
 
-        <!-- GPS ACCURACY -->
-
-        <div class="box">
-
-            <div class="info-icon">
-                📡
-            </div>
-
-            <div class="label">
+            <div class="info-title">
                 GPS Accuracy
             </div>
 
-            <div
-                id="accuracy"
-                class="value">
-                -- m
+            <div class="info-value">
+                <span id="accuracy">--</span>
+                <span class="info-unit">m</span>
             </div>
 
         </div>
 
 
+        <div class="info-card">
 
-        <!-- DISTANCE -->
-
-        <div class="box">
-
-            <div class="info-icon">
-                🛣️
-            </div>
-
-            <div class="label">
+            <div class="info-title">
                 Distance
             </div>
 
-            <div
-                id="distance"
-                class="value">
-                0 m
+            <div class="info-value">
+                <span id="distance">0.00</span>
+                <span class="info-unit">km</span>
             </div>
 
         </div>
@@ -701,107 +460,496 @@ button.stop {
     </div>
 
 
-
-    <!-- START BUTTON -->
+    <!-- BUTTON -->
 
     <button
         id="startButton"
-        onclick="startTracking()">
+        class="start-button"
+        onclick="toggleTracking()">
 
         START RIDE
 
     </button>
 
 
+    <!-- CREDIT -->
+
+    <div class="footer">
+        Created by Guruling Gaidhankar
+    </div>
+
 </div>
-
-
-
-<!-- CREDIT -->
-
-<div class="credit">
-    Created by Guruling Gaidhankar
-</div>
-
 
 
 <script>
 
-
 let watchId = null;
 
-let previousPosition = null;
+let lastPosition = null;
 
 let totalDistance = 0;
 
+let tracking = false;
 
 
-/* ELEMENTS */
+/*
+    SPEED FILTER SETTINGS
 
-const speedElement =
-    document.getElementById("speed");
+    These values are designed to prevent GPS drift
+    from showing fake speed while standing still.
+*/
 
-const accuracyElement =
-    document.getElementById("accuracy");
+const STATIONARY_SPEED_LIMIT = 1.5; // km/h
 
-const distanceElement =
-    document.getElementById("distance");
+const MIN_MOVEMENT_METERS = 2.0;
 
-const statusElement =
-    document.getElementById("status");
+const MAX_REASONABLE_SPEED = 200; // km/h
 
-const startButton =
-    document.getElementById("startButton");
+const MAX_GOOD_ACCURACY = 25; // meters
 
 
+/*
+    Small speed history for smoothing
+*/
 
-/* START */
+let speedHistory = [];
+
+
+/* -----------------------------------------
+   HAVERSINE DISTANCE
+----------------------------------------- */
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+
+    const R = 6371000;
+
+    const dLat =
+        (lat2 - lat1) * Math.PI / 180;
+
+    const dLon =
+        (lon2 - lon1) * Math.PI / 180;
+
+    const a =
+        Math.sin(dLat / 2) *
+        Math.sin(dLat / 2) +
+
+        Math.cos(lat1 * Math.PI / 180) *
+        Math.cos(lat2 * Math.PI / 180) *
+
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c =
+        2 * Math.atan2(
+            Math.sqrt(a),
+            Math.sqrt(1 - a)
+        );
+
+    return R * c;
+}
+
+
+/* -----------------------------------------
+   SPEED FILTER
+----------------------------------------- */
+
+function getStableSpeed(position) {
+
+    const current = position.coords;
+
+    const currentTime = position.timestamp;
+
+    const accuracy = current.accuracy || 999;
+
+
+    /*
+        First GPS point:
+        We don't yet know how fast we are moving.
+    */
+
+    if (!lastPosition) {
+
+        lastPosition = position;
+
+        speedHistory = [];
+
+        return 0;
+    }
+
+
+    const previous = lastPosition.coords;
+
+    const previousTime = lastPosition.timestamp;
+
+
+    const timeSeconds =
+        (currentTime - previousTime) / 1000;
+
+
+    /*
+        Ignore impossible GPS timestamps.
+    */
+
+    if (timeSeconds <= 0) {
+
+        return 0;
+    }
+
+
+    /*
+        Calculate actual movement between GPS points.
+    */
+
+    const movementMeters =
+        calculateDistance(
+            previous.latitude,
+            previous.longitude,
+            current.latitude,
+            current.longitude
+        );
+
+
+    /*
+        Calculate speed ourselves from GPS movement.
+    */
+
+    const calculatedSpeed =
+        (movementMeters / timeSeconds) * 3.6;
+
+
+    /*
+        GPS can provide its own speed value.
+    */
+
+    let gpsSpeed = null;
+
+    if (
+        current.speed !== null &&
+        current.speed !== undefined &&
+        !isNaN(current.speed) &&
+        current.speed >= 0
+    ) {
+
+        gpsSpeed =
+            current.speed * 3.6;
+    }
+
+
+    /*
+        IMPORTANT:
+
+        GPS position can move a few meters even when
+        the bike is completely stationary.
+
+        Therefore, tiny movements are considered GPS drift.
+    */
+
+    const movementThreshold =
+        Math.max(
+            MIN_MOVEMENT_METERS,
+            accuracy * 0.25
+        );
+
+
+    /*
+        If movement is smaller than the GPS uncertainty,
+        treat the bike as stationary.
+    */
+
+    if (
+        movementMeters < movementThreshold
+    ) {
+
+        lastPosition = position;
+
+        speedHistory = [];
+
+        return 0;
+    }
+
+
+    /*
+        If calculated movement speed is extremely low,
+        treat it as stationary too.
+    */
+
+    if (
+        calculatedSpeed < STATIONARY_SPEED_LIMIT
+    ) {
+
+        lastPosition = position;
+
+        speedHistory = [];
+
+        return 0;
+    }
+
+
+    /*
+        When GPS accuracy is poor, don't allow tiny
+        reported speeds to appear.
+    */
+
+    if (
+        accuracy > MAX_GOOD_ACCURACY &&
+        (
+            gpsSpeed === null ||
+            gpsSpeed < 5
+        )
+    ) {
+
+        lastPosition = position;
+
+        speedHistory = [];
+
+        return 0;
+    }
+
+
+    /*
+        Select the best speed value.
+    */
+
+    let speed;
+
+    if (
+        gpsSpeed !== null &&
+        gpsSpeed <= MAX_REASONABLE_SPEED
+    ) {
+
+        /*
+            GPS speed is generally better for actual
+            vehicle movement.
+        */
+
+        speed = gpsSpeed;
+
+    } else {
+
+        speed = calculatedSpeed;
+    }
+
+
+    /*
+        Prevent very small fake speeds.
+    */
+
+    if (
+        speed < STATIONARY_SPEED_LIMIT
+    ) {
+
+        lastPosition = position;
+
+        speedHistory = [];
+
+        return 0;
+    }
+
+
+    /*
+        Add speed to smoothing history.
+    */
+
+    speedHistory.push(speed);
+
+
+    /*
+        Keep only the latest 3 readings.
+    */
+
+    if (speedHistory.length > 3) {
+
+        speedHistory.shift();
+    }
+
+
+    /*
+        Average recent valid readings.
+    */
+
+    let averageSpeed =
+        speedHistory.reduce(
+            (sum, value) => sum + value,
+            0
+        ) / speedHistory.length;
+
+
+    /*
+        Update last position.
+    */
+
+    lastPosition = position;
+
+
+    return averageSpeed;
+}
+
+
+/* -----------------------------------------
+   LOCATION SUCCESS
+----------------------------------------- */
+
+function handleLocation(position) {
+
+    const accuracy =
+        position.coords.accuracy;
+
+
+    document.getElementById("accuracy").textContent =
+        accuracy
+            ? Math.round(accuracy)
+            : "--";
+
+
+    /*
+        GPS is active
+    */
+
+    document
+        .getElementById("gpsDot")
+        .classList.add("active");
+
+
+    document.getElementById("gpsText").textContent =
+        "GPS ACTIVE";
+
+
+    /*
+        Calculate stable filtered speed.
+    */
+
+    const speed =
+        getStableSpeed(position);
+
+
+    /*
+        Show speed.
+    */
+
+    document.getElementById("speed").textContent =
+        speed.toFixed(1);
+
+
+    /*
+        Distance calculation.
+
+        We only add meaningful movement
+        when GPS accuracy is reasonably good.
+    */
+
+    if (lastPosition) {
+
+        const previous =
+            lastPosition.coords;
+
+        const movement =
+            calculateDistance(
+                previous.latitude,
+                previous.longitude,
+                position.coords.latitude,
+                position.coords.longitude
+            );
+
+
+        /*
+            Prevent GPS drift from adding distance
+            while standing still.
+        */
+
+        const distanceThreshold =
+            Math.max(
+                2,
+                accuracy * 0.25
+            );
+
+
+        if (
+            accuracy <= 20 &&
+            movement >= distanceThreshold &&
+            movement < 1000
+        ) {
+
+            totalDistance += movement;
+        }
+    }
+
+
+    document.getElementById("distance").textContent =
+        (totalDistance / 1000).toFixed(2);
+}
+
+
+/* -----------------------------------------
+   LOCATION ERROR
+----------------------------------------- */
+
+function handleError(error) {
+
+    document
+        .getElementById("gpsDot")
+        .classList.remove("active");
+
+
+    document.getElementById("gpsText").textContent =
+        "GPS ERROR";
+
+
+    /*
+        If GPS is lost, don't keep showing
+        the previous speed.
+    */
+
+    document.getElementById("speed").textContent =
+        "0.0";
+
+
+    speedHistory = [];
+}
+
+
+/* -----------------------------------------
+   START TRACKING
+----------------------------------------- */
 
 function startTracking() {
 
     if (!navigator.geolocation) {
 
-        alert(
-            "Geolocation is not supported on this device."
-        );
+        alert("GPS is not supported on this device.");
 
         return;
     }
 
 
-    totalDistance = 0;
-
-    previousPosition = null;
+    tracking = true;
 
 
-    speedElement.textContent = "0.0";
-
-    distanceElement.textContent = "0 m";
-
-    accuracyElement.textContent = "-- m";
-
-
-    statusElement.innerHTML =
-        '<span class="gps-dot"></span> Getting GPS location...';
-
-
-    startButton.textContent =
+    document.getElementById("startButton").textContent =
         "STOP RIDE";
 
-    startButton.classList.add("stop");
 
-    startButton.onclick =
-        stopTracking;
+    document
+        .getElementById("startButton")
+        .classList.add("stop");
 
+
+    document.getElementById("gpsText").textContent =
+        "SEARCHING GPS";
+
+
+    /*
+        Reset current GPS reference.
+    */
+
+    lastPosition = null;
+
+    speedHistory = [];
 
 
     watchId =
         navigator.geolocation.watchPosition(
-
             handleLocation,
-
             handleError,
-
             {
 
                 enableHighAccuracy: true,
@@ -811,272 +959,18 @@ function startTracking() {
                 timeout: 10000
 
             }
-
         );
-
 }
 
 
-
-/* LOCATION */
-
-function handleLocation(position) {
-
-    const latitude =
-        position.coords.latitude;
-
-    const longitude =
-        position.coords.longitude;
-
-    const accuracy =
-        position.coords.accuracy;
-
-
-
-    /* ACCURACY */
-
-    accuracyElement.textContent =
-        accuracy.toFixed(1) + " m";
-
-
-
-    /* SPEED */
-
-    let speedKmh = 0;
-
-
-    if (
-
-        position.coords.speed !== null &&
-
-        position.coords.speed >= 0
-
-    ) {
-
-        speedKmh =
-            position.coords.speed * 3.6;
-
-    }
-
-
-
-    /*
-       Fallback speed calculation
-    */
-
-    if (
-
-        (
-            position.coords.speed === null ||
-            position.coords.speed < 0
-        )
-
-        &&
-
-        previousPosition !== null
-
-    ) {
-
-        const movement =
-            calculateDistance(
-
-                previousPosition.coords.latitude,
-
-                previousPosition.coords.longitude,
-
-                latitude,
-
-                longitude
-
-            );
-
-
-        const time =
-            (
-                position.timestamp -
-                previousPosition.timestamp
-            ) / 1000;
-
-
-        if (time > 0) {
-
-            speedKmh =
-                (movement / time) * 3.6;
-
-        }
-
-    }
-
-
-
-    /* DISTANCE */
-
-    if (previousPosition !== null) {
-
-        const movement =
-            calculateDistance(
-
-                previousPosition.coords.latitude,
-
-                previousPosition.coords.longitude,
-
-                latitude,
-
-                longitude
-
-            );
-
-
-        /*
-           Ignore poor GPS points
-           and tiny GPS drift.
-        */
-
-        if (
-
-            accuracy <= 20 &&
-
-            movement >= 1
-
-        ) {
-
-            totalDistance += movement;
-
-        }
-
-    }
-
-
-    previousPosition =
-        position;
-
-
-
-    /* PROTECT AGAINST GPS SPIKES */
-
-    if (speedKmh > 200) {
-
-        speedKmh = 0;
-
-    }
-
-
-
-    /* DISPLAY */
-
-    speedElement.textContent =
-        speedKmh.toFixed(1);
-
-
-    distanceElement.textContent =
-        formatDistance(totalDistance);
-
-
-    statusElement.innerHTML =
-        '<span class="gps-dot"></span> GPS tracking active';
-
-}
-
-
-
-/* DISTANCE CALCULATION */
-
-function calculateDistance(
-    lat1,
-    lon1,
-    lat2,
-    lon2
-) {
-
-    const R = 6371000;
-
-
-    const dLat =
-        toRadians(lat2 - lat1);
-
-
-    const dLon =
-        toRadians(lon2 - lon1);
-
-
-    const a =
-
-        Math.sin(dLat / 2) *
-        Math.sin(dLat / 2)
-
-        +
-
-        Math.cos(
-            toRadians(lat1)
-        )
-
-        *
-
-        Math.cos(
-            toRadians(lat2)
-        )
-
-        *
-
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-
-
-
-    const c =
-        2 * Math.atan2(
-
-            Math.sqrt(a),
-
-            Math.sqrt(1 - a)
-
-        );
-
-
-    return R * c;
-
-}
-
-
-
-/* RADIANS */
-
-function toRadians(degrees) {
-
-    return degrees *
-        Math.PI / 180;
-
-}
-
-
-
-/* DISTANCE FORMAT */
-
-function formatDistance(meters) {
-
-    if (meters < 1000) {
-
-        return (
-            meters.toFixed(1)
-            + " m"
-        );
-
-    }
-
-
-    return (
-
-        meters / 1000
-
-    ).toFixed(2) + " km";
-
-}
-
-
-
-/* STOP */
+/* -----------------------------------------
+   STOP TRACKING
+----------------------------------------- */
 
 function stopTracking() {
+
+    tracking = false;
+
 
     if (watchId !== null) {
 
@@ -1085,74 +979,55 @@ function stopTracking() {
         );
 
         watchId = null;
-
     }
 
 
-    statusElement.innerHTML =
-        "Ride stopped";
-
-
-    startButton.textContent =
+    document.getElementById("startButton").textContent =
         "START RIDE";
 
 
-    startButton.classList.remove(
-        "stop"
-    );
+    document
+        .getElementById("startButton")
+        .classList.remove("stop");
 
 
-    startButton.onclick =
-        startTracking;
+    document
+        .getElementById("gpsDot")
+        .classList.remove("active");
 
+
+    document.getElementById("gpsText").textContent =
+        "GPS OFF";
+
+
+    /*
+        Stop displaying stale speed.
+    */
+
+    document.getElementById("speed").textContent =
+        "0.0";
+
+
+    lastPosition = null;
+
+    speedHistory = [];
 }
 
 
+/* -----------------------------------------
+   BUTTON
+----------------------------------------- */
 
-/* ERROR */
+function toggleTracking() {
 
-function handleError(error) {
+    if (tracking) {
 
-    let message = "";
+        stopTracking();
 
+    } else {
 
-    switch (error.code) {
-
-        case error.PERMISSION_DENIED:
-
-            message =
-                "Location permission denied.";
-
-            break;
-
-
-        case error.POSITION_UNAVAILABLE:
-
-            message =
-                "GPS location unavailable.";
-
-            break;
-
-
-        case error.TIMEOUT:
-
-            message =
-                "GPS request timed out.";
-
-            break;
-
-
-        default:
-
-            message =
-                "Unknown GPS error.";
-
+        startTracking();
     }
-
-
-    statusElement.innerHTML =
-        "⚠️ " + message;
-
 }
 
 </script>
